@@ -1,0 +1,73 @@
+<?php
+//some best practice for my framework http://anantgarg.com/2009/03/13/write-your-own-php-mvc-framework-part-1/
+class Bootstrap{
+
+	function __construct(){
+//directs user to index page if on a page that does not exist 
+$url = isset($_GET['url'])? $_GET['url']: null;
+//prevent an error if backslash is present in url
+$url = rtrim($url, '/');
+//calling the urls as they extend i.e. index/other
+$url = explode ('/',$url);
+ //print_r($url);
+ 
+ if (empty($url[0])){
+ 
+	include 'controllers/controller/index.php';
+	$controllers = new Index();
+	$controllers->index();
+	return false;
+ }
+		 //echo $url;
+		 //calling the controller files
+		 $file = 'controllers/controller/'.$url[0].'.php';
+		 if (file_exists($file)){
+			include $file;
+		 } else{
+				$this->error();
+			//include 'controllers/controller/error.php';
+			//$controllers = new Error();
+			//return false;
+		 }
+	
+	if(class_exists($url[0])){
+	$controllers = new $url[0];
+	$controllers->loadModel($url[0]);
+	 
+	}
+	else
+		{echo "error";}
+	
+ //find out if there is a function at position 1
+  if (isset($url[2])){
+		if (method_exists($controllers, $url[1])){
+			$controllers->{$url[1]}($url[2]);
+			}else {
+				$this->error();
+			}
+ }
+		 else {
+		 
+			if (isset($url[1])){
+				if (method_exists($controllers, $url[1])) {
+					$controllers->{$url[1]}();}
+			else {
+					$this->error();
+				 }
+			}
+			else {
+					
+					$controllers->index();
+				 }
+			}
+	
+	}
+	
+	function error() {
+		require_once 'controllers/controller/error.php';
+		$controllers = new Error();
+		$controllers->index();
+		return false;}
+		
+		
+}
