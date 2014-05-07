@@ -3,14 +3,14 @@
 class Bootstrap{
 
 	function __construct(){
-//directs user to index page if on a page that does not exist 
-$url = isset($_GET['url'])? $_GET['url']: null;
-//prevent an error if backslash is present in url
-$url = rtrim($url, '/');
-//calling the urls as they extend i.e. index/other
-$url = explode ('/',$url);
- //print_r($url);
- 
+		//directs user to index page if on a page that does not exist 
+		$url = isset($_GET['url'])? $_GET['url']: null;
+		//prevent an error if backslash is present in url
+		$url = rtrim($url, '/');
+		//calling the urls as they extend i.e. index/other
+		$url = explode ('/',$url);
+		 //print_r($url);
+		 
  if (empty($url[0])){
  
 	include 'controllers/controller/index.php';
